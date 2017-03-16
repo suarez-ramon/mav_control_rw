@@ -68,6 +68,7 @@ To run the controller with RotorS simulator (https://github.com/ethz-asl/rotors_
 ```
 * Get the controllers and dependencies
 ```sh
+  $ sudo apt-get install libopenblas-dev
   $ sudo apt-get install liblapacke-dev
   $ git clone https://github.com/catkin/catkin_simple.git
   $ git clone https://github.com/ethz-asl/rotors_simulator.git
