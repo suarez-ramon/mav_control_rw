@@ -13,8 +13,8 @@
  *
  */
 
-#include <mav_msgs/conversions.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/conversions.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 
 #include <ros/ros.h>
 
@@ -44,7 +44,7 @@ class PIDAttitudeController
     attitude_thrust_reference_ << desired_roll, desired_pitch, desired_yaw_rate, desired_thrust;
   }
 
-  void SetOdometry(const mav_msgs::EigenOdometry& odometry);
+  void SetOdometry(const mav_msgs_rotors::EigenOdometry& odometry);
 
   void CalculateRotorVelocities(Eigen::VectorXd* rotor_velocities);
 
@@ -75,7 +75,7 @@ class PIDAttitudeController
   double pitch_error_integration_;
 
   Eigen::Vector4d attitude_thrust_reference_;
-  mav_msgs::EigenOdometry odometry_;
+  mav_msgs_rotors::EigenOdometry odometry_;
 
   void ComputeDesiredAngularAcc(Eigen::Vector3d* angular_acc);
 };

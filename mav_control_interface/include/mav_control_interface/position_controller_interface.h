@@ -18,8 +18,8 @@
 #ifndef POSITION_CONTROLLER_INTERFACE_H_
 #define POSITION_CONTROLLER_INTERFACE_H_
 
-#include <mav_msgs/conversions.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/conversions.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 #include <nav_msgs/Odometry.h>
 
 namespace mav_control_interface {
@@ -35,22 +35,22 @@ class PositionControllerInterface {
 
   virtual double getMass() const = 0;
 
-  virtual bool setReference(const mav_msgs::EigenTrajectoryPoint& reference) = 0;
+  virtual bool setReference(const mav_msgs_rotors::EigenTrajectoryPoint& reference) = 0;
 
-  virtual bool setReferenceArray(const mav_msgs::EigenTrajectoryPointDeque& reference_array);
+  virtual bool setReferenceArray(const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array);
 
-  virtual bool setOdometry(const mav_msgs::EigenOdometry& odometry) = 0;
+  virtual bool setOdometry(const mav_msgs_rotors::EigenOdometry& odometry) = 0;
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPoint* reference) const = 0;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPoint* reference) const = 0;
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPointDeque* reference) const = 0;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const = 0;
 
-  virtual bool getPredictedState(mav_msgs::EigenTrajectoryPointDeque* predicted_state) const = 0;
+  virtual bool getPredictedState(mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const = 0;
 
   virtual bool calculateRollPitchYawrateThrustCommand(
-      mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command);
+      mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command);
 
-  virtual bool calculateAttitudeThrustCommand(mav_msgs::EigenAttitudeThrust* attitude_thrust_command);
+  virtual bool calculateAttitudeThrustCommand(mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command);
 };
 
 } /* namespace mav_flight_manager */

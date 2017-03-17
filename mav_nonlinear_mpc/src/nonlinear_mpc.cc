@@ -194,9 +194,9 @@ void NonlinearModelPredictiveControl::applyParameters()
   }
 }
 
-void NonlinearModelPredictiveControl::setOdometry(const mav_msgs::EigenOdometry& odometry)
+void NonlinearModelPredictiveControl::setOdometry(const mav_msgs_rotors::EigenOdometry& odometry)
 {
-  static mav_msgs::EigenOdometry previous_odometry = odometry;
+  static mav_msgs_rotors::EigenOdometry previous_odometry = odometry;
 
   if (!received_first_odometry_) {
     Eigen::Vector3d euler_angles;
@@ -244,13 +244,13 @@ void NonlinearModelPredictiveControl::setOdometry(const mav_msgs::EigenOdometry&
 }
 
 void NonlinearModelPredictiveControl::setCommandTrajectoryPoint(
-    const mav_msgs::EigenTrajectoryPoint& command_trajectory)
+    const mav_msgs_rotors::EigenTrajectoryPoint& command_trajectory)
 {
   mpc_queue_.insertReference(command_trajectory);
 }
 
 void NonlinearModelPredictiveControl::setCommandTrajectory(
-    const mav_msgs::EigenTrajectoryPointDeque& command_trajectory)
+    const mav_msgs_rotors::EigenTrajectoryPointDeque& command_trajectory)
 {
   int array_size = command_trajectory.size();
   if (array_size < 1)
@@ -484,7 +484,7 @@ Eigen::MatrixXd NonlinearModelPredictiveControl::solveCARE(Eigen::MatrixXd Q, Ei
 }
 
 bool NonlinearModelPredictiveControl::getCurrentReference(
-    mav_msgs::EigenTrajectoryPoint* reference) const
+    mav_msgs_rotors::EigenTrajectoryPoint* reference) const
 {
   assert(reference != nullptr);
 
@@ -497,14 +497,14 @@ bool NonlinearModelPredictiveControl::getCurrentReference(
 }
 
 bool NonlinearModelPredictiveControl::getCurrentReference(
-    mav_msgs::EigenTrajectoryPointDeque* reference) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const
 {
   assert(reference != nullptr);
 
   (*reference).clear();
 
   for (size_t i = 0; i < position_ref_.size(); i++) {
-    mav_msgs::EigenTrajectoryPoint pnt;
+    mav_msgs_rotors::EigenTrajectoryPoint pnt;
     pnt.position_W = position_ref_.at(i);
     pnt.velocity_W = velocity_ref_.at(i);
     pnt.acceleration_W = acceleration_ref_.at(i);
@@ -515,12 +515,12 @@ bool NonlinearModelPredictiveControl::getCurrentReference(
 }
 
 bool NonlinearModelPredictiveControl::getPredictedState(
-    mav_msgs::EigenTrajectoryPointDeque* predicted_state) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const
 {
   assert(predicted_state != nullptr);
 
   for (size_t i = 0; i < ACADO_N + 1; i++) {
-    mav_msgs::EigenTrajectoryPoint pnt;
+    mav_msgs_rotors::EigenTrajectoryPoint pnt;
     pnt.position_W = state_.block(i, 6, 1, 3).transpose();
     (*predicted_state).push_back(pnt);
   }

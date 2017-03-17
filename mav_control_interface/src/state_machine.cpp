@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 
-#include <mav_msgs/default_topics.h>
+#include <mav_msgs_rotors/default_topics.h>
 #include <std_msgs/String.h>
 #include <tf_conversions/tf_eigen.h>
 
@@ -31,8 +31,8 @@ StateMachineDefinition::StateMachineDefinition(const ros::NodeHandle& nh, const 
      private_nh_(private_nh),
      controller_(controller)
 {
-  command_publisher_ = nh_.advertise<mav_msgs::RollPitchYawrateThrust>(
-      mav_msgs::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST, 1);
+  command_publisher_ = nh_.advertise<mav_msgs_rotors::RollPitchYawrateThrust>(
+      mav_msgs_rotors::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST, 1);
 
   current_reference_publisher_ = nh_.advertise<trajectory_msgs::MultiDOFJointTrajectory>(
       "command/current_reference", 1);
@@ -50,17 +50,17 @@ void StateMachineDefinition::SetParameters(const Parameters& parameters)
 }
 
 void StateMachineDefinition::PublishAttitudeCommand (
-    const mav_msgs::EigenRollPitchYawrateThrust& command) const
+    const mav_msgs_rotors::EigenRollPitchYawrateThrust& command) const
 {
-  mav_msgs::RollPitchYawrateThrustPtr msg(new mav_msgs::RollPitchYawrateThrust);
+  mav_msgs_rotors::RollPitchYawrateThrustPtr msg(new mav_msgs_rotors::RollPitchYawrateThrust);
 
-  mav_msgs::EigenRollPitchYawrateThrust tmp_command = command;
+  mav_msgs_rotors::EigenRollPitchYawrateThrust tmp_command = command;
   tmp_command.thrust.x() = 0;
   tmp_command.thrust.y() = 0;
   tmp_command.thrust.z() = std::max(0.0, command.thrust.z());
 
   msg->header.stamp = ros::Time::now();  // TODO(acmarkus): get from msg
-  mav_msgs::msgRollPitchYawrateThrustFromEigen(command, msg.get());
+  mav_msgs_rotors::msgRollPitchYawrateThrustFromEigen(command, msg.get());
   command_publisher_.publish(msg);
 }
 
@@ -76,7 +76,7 @@ void StateMachineDefinition::PublishStateInfo(const std::string& info)
 void StateMachineDefinition::PublishCurrentReference()
 {
   ros::Time time_now = ros::Time::now();
-  mav_msgs::EigenTrajectoryPoint current_reference;
+  mav_msgs_rotors::EigenTrajectoryPoint current_reference;
   controller_->getCurrentReference(&current_reference);
 
   tf::Quaternion q;
@@ -93,7 +93,7 @@ void StateMachineDefinition::PublishCurrentReference()
 
   if (current_reference_publisher_.getNumSubscribers() > 0) {
     trajectory_msgs::MultiDOFJointTrajectoryPtr msg(new trajectory_msgs::MultiDOFJointTrajectory);
-    mav_msgs::msgMultiDofJointTrajectoryFromEigen(current_reference, msg.get());
+    mav_msgs_rotors::msgMultiDofJointTrajectoryFromEigen(current_reference, msg.get());
     msg->header.stamp = time_now;
     msg->header.frame_id = reference_frame_id_;
     current_reference_publisher_.publish(msg);
@@ -103,7 +103,7 @@ void StateMachineDefinition::PublishCurrentReference()
 void StateMachineDefinition::PublishPredictedState()
 {
   if (predicted_state_publisher_.getNumSubscribers() > 0) {
-    mav_msgs::EigenTrajectoryPointDeque predicted_state;
+    mav_msgs_rotors::EigenTrajectoryPointDeque predicted_state;
     controller_->getPredictedState(&predicted_state);
     visualization_msgs::Marker marker_queue;
     marker_queue.header.frame_id = reference_frame_id_;

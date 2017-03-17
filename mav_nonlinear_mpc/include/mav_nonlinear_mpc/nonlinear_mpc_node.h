@@ -39,12 +39,12 @@
 #include <ros/callback_queue.h>
 
 //ros msgs
-#include <mav_msgs/RollPitchYawrateThrust.h>
-#include <mav_msgs/eigen_mav_msgs.h>
-#include <mav_msgs/conversions.h>
+#include <mav_msgs_rotors/RollPitchYawrateThrust.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
+#include <mav_msgs_rotors/conversions.h>
 #include <nav_msgs/Odometry.h>
 #include <trajectory_msgs/MultiDOFJointTrajectory.h>
-#include <mav_msgs/Status.h>
+#include <mav_msgs_rotors/Status.h>
 
 //dynamic reconfiguration
 #include <dynamic_reconfigure/server.h>
@@ -85,24 +85,24 @@ class NonLinearModelPredictiveControllerNode : public mav_control_interface::Pos
     return nonlinear_mpc_.getMass();
   }
 
-  virtual bool setReference(const mav_msgs::EigenTrajectoryPoint& reference);
+  virtual bool setReference(const mav_msgs_rotors::EigenTrajectoryPoint& reference);
 
-  virtual bool setReferenceArray(const mav_msgs::EigenTrajectoryPointDeque& reference_array);
+  virtual bool setReferenceArray(const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array);
 
-  virtual bool setOdometry(const mav_msgs::EigenOdometry& odometry);
+  virtual bool setOdometry(const mav_msgs_rotors::EigenOdometry& odometry);
 
   virtual bool calculateRollPitchYawrateThrustCommand(
-      mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command);
+      mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command);
 
-  virtual bool calculateAttitudeThrustCommand(mav_msgs::EigenAttitudeThrust* attitude_thrust_command);
+  virtual bool calculateAttitudeThrustCommand(mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command);
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPoint* reference) const;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPoint* reference) const;
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPointDeque* reference) const;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const;
 
-  virtual bool getPredictedState(mav_msgs::EigenTrajectoryPointDeque* predicted_state) const;
+  virtual bool getPredictedState(mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const;
 
-  void uavStatusCallback(const mav_msgs::StatusConstPtr& msg);
+  void uavStatusCallback(const mav_msgs_rotors::StatusConstPtr& msg);
 
 };
 

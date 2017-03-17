@@ -31,8 +31,8 @@
 #include <boost/msm/front/euml/common.hpp>
 #include <boost/msm/front/euml/operator.hpp>
 
-#include <mav_msgs/conversions.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/conversions.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 
@@ -66,22 +66,22 @@ struct RcUpdate
 
 struct ReferenceUpdate
 {
-  ReferenceUpdate(const mav_msgs::EigenTrajectoryPointDeque& _references)
+  ReferenceUpdate(const mav_msgs_rotors::EigenTrajectoryPointDeque& _references)
       : references(_references)
   {
   }
 
-  mav_msgs::EigenTrajectoryPointDeque references;
+  mav_msgs_rotors::EigenTrajectoryPointDeque references;
 };
 
 struct OdometryUpdate
 {
-  OdometryUpdate(const mav_msgs::EigenOdometry& _odometry)
+  OdometryUpdate(const mav_msgs_rotors::EigenOdometry& _odometry)
       : odometry(_odometry)
   {
   }
 
-  mav_msgs::EigenOdometry odometry;
+  mav_msgs_rotors::EigenOdometry odometry;
 };
 
 struct BackToPositionHold {};
@@ -214,10 +214,10 @@ private:
   ros::Publisher current_reference_publisher_;
   ros::Publisher predicted_state_publisher_;
   Parameters parameters_;
-  mav_msgs::EigenOdometry current_state_;
-  mav_msgs::EigenTrajectoryPointDeque current_reference_queue_;
+  mav_msgs_rotors::EigenOdometry current_state_;
+  mav_msgs_rotors::EigenTrajectoryPointDeque current_reference_queue_;
 
-  void PublishAttitudeCommand(const mav_msgs::EigenRollPitchYawrateThrust& command) const;
+  void PublishAttitudeCommand(const mav_msgs_rotors::EigenRollPitchYawrateThrust& command) const;
   void PublishStateInfo(const std::string& info);
   void PublishCurrentReference();
   void PublishPredictedState();
@@ -285,7 +285,7 @@ private:
     template<class FSM, class SourceState, class TargetState>
     void operator()(const RcUpdate& evt, FSM& fsm, SourceState&, TargetState&)
     {
-      mav_msgs::EigenRollPitchYawrateThrust command;
+      mav_msgs_rotors::EigenRollPitchYawrateThrust command;
       command.pitch = evt.rc_data.right_up_down * fsm.parameters_.rc_max_roll_pitch_command_;
       command.roll = evt.rc_data.right_side * fsm.parameters_.rc_max_roll_pitch_command_;
       command.yaw_rate = -evt.rc_data.left_side * fsm.parameters_.rc_max_yaw_rate_command_;
@@ -315,9 +315,9 @@ private:
     template<class EVT, class FSM, class SourceState, class TargetState>
     void operator()(EVT const& evt, FSM& fsm, SourceState&, TargetState&)
     {
-      mav_msgs::EigenTrajectoryPoint reference;
+      mav_msgs_rotors::EigenTrajectoryPoint reference;
       reference.position_W = fsm.current_state_.position_W;
-      reference.setFromYaw(mav_msgs::yawFromQuaternion(fsm.current_state_.orientation_W_B));
+      reference.setFromYaw(mav_msgs_rotors::yawFromQuaternion(fsm.current_state_.orientation_W_B));
 
       fsm.controller_->setReference(reference);
       fsm.current_reference_queue_.clear();
@@ -340,7 +340,7 @@ private:
     template<class EVT, class FSM, class SourceState, class TargetState>
     void operator()(EVT const& evt, FSM& fsm, SourceState&, TargetState&)
     {
-      mav_msgs::EigenRollPitchYawrateThrust command;
+      mav_msgs_rotors::EigenRollPitchYawrateThrust command;
       fsm.controller_->calculateRollPitchYawrateThrustCommand(&command);
       fsm.PublishAttitudeCommand(command);
       fsm.PublishCurrentReference();
@@ -362,13 +362,13 @@ private:
     }
 
     template<class FSM>
-    void ComputeStickToCarrotMapping(const FSM& fsm, const RcData& rc_data, mav_msgs::EigenTrajectoryPoint* carrot)
+    void ComputeStickToCarrotMapping(const FSM& fsm, const RcData& rc_data, mav_msgs_rotors::EigenTrajectoryPoint* carrot)
     {
       assert(carrot != nullptr);
 
       const Parameters& p = fsm.parameters_;
 
-      const mav_msgs::EigenOdometry& current_state = fsm.current_state_;
+      const mav_msgs_rotors::EigenOdometry& current_state = fsm.current_state_;
 
       Eigen::Vector3d stick_position;
       stick_position.x() = p.stick_deadzone_(rc_data.right_up_down);
@@ -381,7 +381,7 @@ private:
         stick_position = stick_position / stick_position_norm;
       }
 
-      const double yaw = mav_msgs::yawFromQuaternion(current_state.orientation_W_B);
+      const double yaw = mav_msgs_rotors::yawFromQuaternion(current_state.orientation_W_B);
       Eigen::Vector3d carrot_position = Eigen::AngleAxisd(yaw, Eigen::Vector3d::UnitZ()) * stick_position
           * p.rc_teleop_max_carrot_distance_position_;
 
@@ -397,9 +397,9 @@ private:
     {
       const Parameters& p = fsm.parameters_;
       const RcData& rc_data = evt.rc_data;
-      const mav_msgs::EigenOdometry& current_state = fsm.current_state_;
+      const mav_msgs_rotors::EigenOdometry& current_state = fsm.current_state_;
 
-      mav_msgs::EigenTrajectoryPoint new_reference;
+      mav_msgs_rotors::EigenTrajectoryPoint new_reference;
 
       ComputeStickToCarrotMapping(fsm, rc_data, &new_reference);
       new_reference.position_W += current_state.position_W;
@@ -421,9 +421,9 @@ private:
       const Parameters& p = fsm.parameters_;
       const RcData& rc_data = evt.rc_data;
 
-      const mav_msgs::EigenOdometry& current_state = fsm.current_state_;
-      mav_msgs::EigenTrajectoryPoint new_reference, carrot;
-      mav_msgs::EigenTrajectoryPoint current_reference = fsm.current_reference_queue_.front();
+      const mav_msgs_rotors::EigenOdometry& current_state = fsm.current_state_;
+      mav_msgs_rotors::EigenTrajectoryPoint new_reference, carrot;
+      mav_msgs_rotors::EigenTrajectoryPoint current_reference = fsm.current_reference_queue_.front();
 
       ComputeStickToCarrotMapping(fsm, rc_data, &carrot);
 
@@ -462,17 +462,17 @@ private:
       const int64_t dt_ns = static_cast<int64_t>(dt * seconds_to_ns);
 
       const Parameters& p = fsm.parameters_;
-      mav_msgs::EigenOdometry& current_state = fsm.current_state_;
-      mav_msgs::EigenTrajectoryPointDeque& current_reference_queue = fsm.current_reference_queue_;
+      mav_msgs_rotors::EigenOdometry& current_state = fsm.current_state_;
+      mav_msgs_rotors::EigenTrajectoryPointDeque& current_reference_queue = fsm.current_reference_queue_;
       current_reference_queue.clear();
 
-//      mav_msgs::EigenTrajectoryPoint trajectory_point;
+//      mav_msgs_rotors::EigenTrajectoryPoint trajectory_point;
 //      trajectory_point.time_from_start_ns = 0;
 //      trajectory_point.position_W = current_state.position_W;
 //
 //      constexpr double negative_distance_z = 0.5;
 //      trajectory_point.position_W.z() -= negative_distance_z;
-//      trajectory_point.setFromYaw(mav_msgs::yawFromQuaternion(current_state.orientation_W_B));
+//      trajectory_point.setFromYaw(mav_msgs_rotors::yawFromQuaternion(current_state.orientation_W_B));
 //      current_reference_queue.push_back(trajectory_point);
 //
 //      const int64_t takeoff_time_below_ground_ns = static_cast<int64_t>(p.takeoff_time_ * 0.5 * seconds_to_ns);
@@ -493,11 +493,11 @@ private:
 //      }
 
 
-      mav_msgs::EigenTrajectoryPoint trajectory_point;
+      mav_msgs_rotors::EigenTrajectoryPoint trajectory_point;
       trajectory_point.time_from_start_ns = 0;
       trajectory_point.position_W = current_state.position_W;
       trajectory_point.position_W.z() += p.takeoff_distance_;
-      trajectory_point.setFromYaw(mav_msgs::yawFromQuaternion(current_state.orientation_W_B));
+      trajectory_point.setFromYaw(mav_msgs_rotors::yawFromQuaternion(current_state.orientation_W_B));
       current_reference_queue.push_back(trajectory_point);
 
       ROS_INFO_STREAM("final take off position: " << trajectory_point.position_W.transpose());

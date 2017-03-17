@@ -17,8 +17,8 @@
 #include <memory.h>
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
-#include <mav_msgs/RollPitchYawrateThrust.h>
-#include <mav_msgs/Actuators.h>
+#include <mav_msgs_rotors/RollPitchYawrateThrust.h>
+#include <mav_msgs_rotors/Actuators.h>
 #include <nav_msgs/Odometry.h>
 #include <Eigen/Eigen>
 
@@ -51,7 +51,7 @@ class PIDAttitudeControllerNode
   bool got_first_attitude_command_;
 
   void CommandRollPitchYawRateThrustCallback(
-      const mav_msgs::RollPitchYawrateThrustConstPtr& roll_pitch_yawrate_thrust_reference);
+      const mav_msgs_rotors::RollPitchYawrateThrustConstPtr& roll_pitch_yawrate_thrust_reference);
   void OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg);
 
   void DynConfigCallback(mav_linear_mpc::PIDAttitudeConfig &config, uint32_t level);

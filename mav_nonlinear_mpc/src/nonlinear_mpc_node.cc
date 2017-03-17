@@ -29,7 +29,7 @@
  */
 
 #include <ros/ros.h>
-#include <mav_msgs/default_topics.h>
+#include <mav_msgs_rotors/default_topics.h>
 #include <mav_nonlinear_mpc/nonlinear_mpc_node.h>
 #include <mav_control_interface/mav_control_interface.h>
 #include <mav_control_interface/rc_interface_aci.h>
@@ -53,14 +53,14 @@ NonLinearModelPredictiveControllerNode::~NonLinearModelPredictiveControllerNode(
 }
 
 bool NonLinearModelPredictiveControllerNode::setReferenceArray(
-    const mav_msgs::EigenTrajectoryPointDeque& reference_array)
+    const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array)
 {
   nonlinear_mpc_.setCommandTrajectory(reference_array);
   return true;
 }
 
 bool NonLinearModelPredictiveControllerNode::setReference(
-    const mav_msgs::EigenTrajectoryPoint& reference)
+    const mav_msgs_rotors::EigenTrajectoryPoint& reference)
 {
   nonlinear_mpc_.setCommandTrajectoryPoint(reference);
   return true;
@@ -104,20 +104,20 @@ void NonLinearModelPredictiveControllerNode::ControllerDynConfigCallback(
 
 
 
-bool NonLinearModelPredictiveControllerNode::setOdometry(const mav_msgs::EigenOdometry& odometry)
+bool NonLinearModelPredictiveControllerNode::setOdometry(const mav_msgs_rotors::EigenOdometry& odometry)
 {
   nonlinear_mpc_.setOdometry(odometry);
   return true;
 }
 
 bool NonLinearModelPredictiveControllerNode::calculateAttitudeThrustCommand(
-    mav_msgs::EigenAttitudeThrust* attitude_thrust_command)
+    mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command)
 {
   ROS_WARN("calculateAttitudeThrustCommand not implemented");
   return false;
 }
 
-bool NonLinearModelPredictiveControllerNode::calculateRollPitchYawrateThrustCommand(mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command){
+bool NonLinearModelPredictiveControllerNode::calculateRollPitchYawrateThrustCommand(mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command){
   Eigen::Vector4d rpy_thrust;
   nonlinear_mpc_.calculateRollPitchYawrateThrustCommand(&rpy_thrust);
   attitude_thrust_command->roll = rpy_thrust(0);
@@ -128,21 +128,21 @@ bool NonLinearModelPredictiveControllerNode::calculateRollPitchYawrateThrustComm
 }
 
 bool NonLinearModelPredictiveControllerNode::getCurrentReference(
-    mav_msgs::EigenTrajectoryPoint* reference) const
+    mav_msgs_rotors::EigenTrajectoryPoint* reference) const
 {
   assert(reference != nullptr);
   return nonlinear_mpc_.getCurrentReference(reference);
 }
 
 bool NonLinearModelPredictiveControllerNode::getCurrentReference(
-    mav_msgs::EigenTrajectoryPointDeque* reference) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const
 {
   assert(reference != nullptr);
   return nonlinear_mpc_.getCurrentReference(reference);
 }
 
 bool NonLinearModelPredictiveControllerNode::getPredictedState(
-    mav_msgs::EigenTrajectoryPointDeque* predicted_state) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const
 {
   assert(predicted_state != nullptr);
   return nonlinear_mpc_.getPredictedState(predicted_state);

@@ -123,7 +123,7 @@ void PIDAttitudeController::InitializeParams()
   initialized_params_ = true;
 }
 
-void PIDAttitudeController::SetOdometry(const mav_msgs::EigenOdometry& odometry)
+void PIDAttitudeController::SetOdometry(const mav_msgs_rotors::EigenOdometry& odometry)
 {
   odometry_ = odometry;
 }

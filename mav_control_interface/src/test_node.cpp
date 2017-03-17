@@ -37,14 +37,14 @@ class DummyController : public PositionControllerInterface{
     return 1.0;
   }
 
-  virtual bool setReference(const mav_msgs::EigenTrajectoryPoint& reference){
+  virtual bool setReference(const mav_msgs_rotors::EigenTrajectoryPoint& reference){
     ROS_INFO_STREAM("got reference: position=" << reference.position_W.transpose() << " yaw=" << reference.getYaw());
     reference_array_.clear();
     reference_array_.push_back(reference);
     return true;
   }
 
-  virtual bool setReferenceArray(const mav_msgs::EigenTrajectoryPointDeque& reference_array){
+  virtual bool setReferenceArray(const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array){
     ROS_INFO_STREAM("got reference array:");
     for(const auto& reference : reference_array)
       ROS_INFO_STREAM("    position=" << reference.position_W.transpose() << " yaw=" << reference.getYaw());
@@ -52,19 +52,19 @@ class DummyController : public PositionControllerInterface{
     return true;
   }
 
-  virtual bool setOdometry(const mav_msgs::EigenOdometry& odometry){
+  virtual bool setOdometry(const mav_msgs_rotors::EigenOdometry& odometry){
     ROS_INFO_STREAM("got state: position=" << odometry.position_W.transpose() <<
                     " attitude=" << odometry.orientation_W_B.coeffs().transpose());
     return true;
   }
 
   virtual bool calculateRollPitchYawrateThrustCommand(
-      mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command){
+      mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command){
     ROS_INFO("calculateRollPitchYawrateThrustCommand");
     return true;
   }
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPoint* reference) const {
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPoint* reference) const {
     assert(reference != nullptr);
 
     if(reference_array_.empty())
@@ -74,7 +74,7 @@ class DummyController : public PositionControllerInterface{
     return true;
   }
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPointDeque* reference) const {
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const {
     assert(reference != nullptr);
 
     if(reference_array_.empty())
@@ -84,18 +84,18 @@ class DummyController : public PositionControllerInterface{
     return true;
   }
 
-  virtual bool getPredictedState(mav_msgs::EigenTrajectoryPointDeque* predicted_state) const
+  virtual bool getPredictedState(mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const
   {
     return false;
   }
 
-  virtual bool calculateAttitudeThrustCommand(mav_msgs::EigenAttitudeThrust* attitude_thrust_command){
+  virtual bool calculateAttitudeThrustCommand(mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command){
     ROS_INFO("calculateAttitudeThrustCommand");
     return true;
   }
 
  private:
-  mav_msgs::EigenTrajectoryPointDeque reference_array_;
+  mav_msgs_rotors::EigenTrajectoryPointDeque reference_array_;
 
 };
 

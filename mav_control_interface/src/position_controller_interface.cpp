@@ -30,20 +30,20 @@ PositionControllerInterface::~PositionControllerInterface() {
 }
 
 bool PositionControllerInterface::setReferenceArray(
-    const mav_msgs::EigenTrajectoryPointDeque& reference_array) {
+    const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array) {
   ROS_WARN_STREAM_THROTTLE(1, "setReferenceArray() not implemented for controller " << this->getName());
   return false;
 }
 
 bool PositionControllerInterface::calculateRollPitchYawrateThrustCommand(
-    mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command) {
+    mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command) {
   ROS_WARN_STREAM_THROTTLE(1, "calculateRollPitchYawrateThrustCommand() not implemented for controller "
                            << this->getName());
   return false;
 }
 
 bool PositionControllerInterface::calculateAttitudeThrustCommand(
-    mav_msgs::EigenAttitudeThrust* attitude_thrust_command) {
+    mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command) {
   ROS_WARN_STREAM_THROTTLE(1, "calculateAttitudeThrustCommand() not implemented for controller "
                            << this->getName());
   return false;

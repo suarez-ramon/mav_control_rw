@@ -116,7 +116,7 @@ Published and subscribed topics
 The linear and nonlinear MPC controllers publish and subscribe to the following topics:
 
 - Published topics:
-  - **`command/roll_pitch_yawrate_thrust`** of type `mav_msgs/RollPitchYawrateThrust`. This is the command to the low level controller. Angles are in `rad` and `thrust` is in `N`.
+  - **`command/roll_pitch_yawrate_thrust`** of type `mav_msgs_rotors/RollPitchYawrateThrust`. This is the command to the low level controller. Angles are in `rad` and `thrust` is in `N`.
   - **`command/current_reference`** of type `trajectory_msgs/MultiDOFJointTrajectory`. This is the current reference.
   -  **`state_machine/state_info`** of type `std_msgs/String`. This is the current state of the state machine of mav_control_interface.
   -  **`predicted_state`** of type `visualization_msgs/Marker`. This is the predicted vehicle positions that can be used for visualization in `rviz`.
@@ -132,10 +132,10 @@ The linear and nonlinear MPC controllers publish and subscribe to the following 
   
 The PID attitude controller publishes and subscribes to the following topics:
 - Published topics:
-  - **`command/motor_speed`** of type `mav_msgs/Actuators`. This is the commanded motor speed.
+  - **`command/motor_speed`** of type `mav_msgs_rotors/Actuators`. This is the commanded motor speed.
 
 - Subscribed topics:
-  - **`command/roll_pitch_yawrate_thrust`** of type `mav_msgs/RollPitchYawrateThrust`.
+  - **`command/roll_pitch_yawrate_thrust`** of type `mav_msgs_rotors/RollPitchYawrateThrust`.
   - **`odometry`** of type `nav_msgs/Odometry`.
   
  

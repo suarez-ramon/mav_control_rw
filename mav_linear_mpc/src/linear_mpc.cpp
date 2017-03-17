@@ -259,9 +259,9 @@ void LinearModelPredictiveController::applyParameters()
   }
 }
 
-void LinearModelPredictiveController::setOdometry(const mav_msgs::EigenOdometry& odometry)
+void LinearModelPredictiveController::setOdometry(const mav_msgs_rotors::EigenOdometry& odometry)
 {
-  static mav_msgs::EigenOdometry previous_odometry = odometry;
+  static mav_msgs_rotors::EigenOdometry previous_odometry = odometry;
 
   if (!received_first_odometry_) {
     Eigen::Vector3d euler_angles;
@@ -305,13 +305,13 @@ void LinearModelPredictiveController::setOdometry(const mav_msgs::EigenOdometry&
 }
 
 void LinearModelPredictiveController::setCommandTrajectoryPoint(
-    const mav_msgs::EigenTrajectoryPoint& command_trajectory)
+    const mav_msgs_rotors::EigenTrajectoryPoint& command_trajectory)
 {
   mpc_queue_.insertReference(command_trajectory);
 }
 
 void LinearModelPredictiveController::setCommandTrajectory(
-    const mav_msgs::EigenTrajectoryPointDeque& command_trajectory_array)
+    const mav_msgs_rotors::EigenTrajectoryPointDeque& command_trajectory_array)
 {
   int array_size = command_trajectory_array.size();
   if (array_size < 1) {
@@ -507,7 +507,7 @@ void LinearModelPredictiveController::calculateRollPitchYawrateThrustCommand(
 }
 
 bool LinearModelPredictiveController::getCurrentReference(
-    mav_msgs::EigenTrajectoryPoint* reference) const
+    mav_msgs_rotors::EigenTrajectoryPoint* reference) const
 {
   assert(reference != nullptr);
 
@@ -519,14 +519,14 @@ bool LinearModelPredictiveController::getCurrentReference(
 }
 
 bool LinearModelPredictiveController::getCurrentReference(
-    mav_msgs::EigenTrajectoryPointDeque* reference) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const
 {
   assert(reference != nullptr);
 
   (*reference).clear();
 
   for (int i = 0; i < position_ref_.size(); i++) {
-    mav_msgs::EigenTrajectoryPoint pnt;
+    mav_msgs_rotors::EigenTrajectoryPoint pnt;
     pnt.position_W = position_ref_.at(i);
     pnt.setFromYaw(yaw_ref_.at(i));
     (*reference).push_back(pnt);
@@ -535,12 +535,12 @@ bool LinearModelPredictiveController::getCurrentReference(
 }
 
 bool LinearModelPredictiveController::getPredictedState(
-    mav_msgs::EigenTrajectoryPointDeque* predicted_state) const
+    mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const
 {
   assert(predicted_state != nullptr);
 
   for (size_t i = 1; i < kPredictionHorizonSteps; i++) {
-    mav_msgs::EigenTrajectoryPoint pnt;
+    mav_msgs_rotors::EigenTrajectoryPoint pnt;
     pnt.position_W = Eigen::Vector3d(vars.x[i][0], vars.x[i][1], vars.x[i][2]);
     (*predicted_state).push_back(pnt);
   }

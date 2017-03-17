@@ -21,7 +21,7 @@
 #include <deque>
 
 #include <ros/ros.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 #include <nav_msgs/Odometry.h>
 #include <std_srvs/Empty.h>
 #include <trajectory_msgs/MultiDOFJointTrajectory.h>
@@ -69,7 +69,7 @@ class MavControlInterfaceImpl
   bool TakeoffCallback(std_srvs::EmptyRequest& request, std_srvs::EmptyResponse& response);
   bool BackToPositionHoldCallback(std_srvs::Empty::Request& request, std_srvs::Empty::Response& response);
 
-  void publishAttitudeCommand(const mav_msgs::RollPitchYawrateThrust& command);
+  void publishAttitudeCommand(const mav_msgs_rotors::RollPitchYawrateThrust& command);
 };
 
 } /* namespace mav_control_interface */

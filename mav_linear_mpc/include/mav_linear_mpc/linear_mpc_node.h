@@ -60,22 +60,22 @@ class LinearModelPredictiveControllerNode: public mav_control_interface::Positio
     return linear_mpc_.getMass();
   }
 
-  virtual bool setReference(const mav_msgs::EigenTrajectoryPoint& reference);
+  virtual bool setReference(const mav_msgs_rotors::EigenTrajectoryPoint& reference);
 
-  virtual bool setReferenceArray(const mav_msgs::EigenTrajectoryPointDeque& reference_array);
+  virtual bool setReferenceArray(const mav_msgs_rotors::EigenTrajectoryPointDeque& reference_array);
 
-  virtual bool setOdometry(const mav_msgs::EigenOdometry& odometry);
+  virtual bool setOdometry(const mav_msgs_rotors::EigenOdometry& odometry);
 
   virtual bool calculateRollPitchYawrateThrustCommand(
-      mav_msgs::EigenRollPitchYawrateThrust* attitude_thrust_command);
+      mav_msgs_rotors::EigenRollPitchYawrateThrust* attitude_thrust_command);
 
-  virtual bool calculateAttitudeThrustCommand(mav_msgs::EigenAttitudeThrust* attitude_thrust_command);
+  virtual bool calculateAttitudeThrustCommand(mav_msgs_rotors::EigenAttitudeThrust* attitude_thrust_command);
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPoint* reference) const;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPoint* reference) const;
 
-  virtual bool getCurrentReference(mav_msgs::EigenTrajectoryPointDeque* reference) const;
+  virtual bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const;
 
-  virtual bool getPredictedState(mav_msgs::EigenTrajectoryPointDeque* predicted_state) const;
+  virtual bool getPredictedState(mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const;
 
 };
 

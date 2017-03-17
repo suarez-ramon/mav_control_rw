@@ -19,8 +19,8 @@
 #ifndef MAV_CONTROL_COMMON_MPC_QUEUE_H_
 #define MAV_CONTROL_COMMON_MPC_QUEUE_H_
 
-#include <mav_msgs/conversions.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/conversions.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 #include <deque>
 #include <chrono>
 #include <thread>
@@ -38,18 +38,18 @@ class MPCQueue
   MPCQueue(const ros::NodeHandle& nh, const ros::NodeHandle& private_nh, int mpc_queue_size);
   ~MPCQueue();
 
-	void initializeQueue(const mav_msgs::EigenTrajectoryPoint& point,
+	void initializeQueue(const mav_msgs_rotors::EigenTrajectoryPoint& point,
 			double controller_sampling_time, double prediction_sampling_time);
 
-	void initializeQueue(const mav_msgs::EigenOdometry& odometry,
+	void initializeQueue(const mav_msgs_rotors::EigenOdometry& odometry,
 			double controller_sampling_time, double prediction_sampling_time);
 
 	void initializeQueue(double controller_sampling_time,
 			double prediction_sampling_time);
 
-  void insertReference(const mav_msgs::EigenTrajectoryPoint& point);
+  void insertReference(const mav_msgs_rotors::EigenTrajectoryPoint& point);
 
-  void insertReferenceTrajectory(const mav_msgs::EigenTrajectoryPointDeque& queue);
+  void insertReferenceTrajectory(const mav_msgs_rotors::EigenTrajectoryPointDeque& queue);
 
   void getQueue(Vector3dDeque& position_reference_, Vector3dDeque& velocity_reference_,
                 Vector3dDeque& acceleration_reference, std::deque<double>& yaw_reference_,
@@ -81,15 +81,15 @@ class MPCQueue
   double queue_start_time_;
 
   void clearQueue();
-  void fillQueueWithPoint(const mav_msgs::EigenTrajectoryPoint& point);
-  void pushBackPoint(const mav_msgs::EigenTrajectoryPoint& point);
+  void fillQueueWithPoint(const mav_msgs_rotors::EigenTrajectoryPoint& point);
+  void pushBackPoint(const mav_msgs_rotors::EigenTrajectoryPoint& point);
   void popFrontPoint();
   void popBackPoint();
-  void getLastPoint(mav_msgs::EigenTrajectoryPoint* point);
+  void getLastPoint(mav_msgs_rotors::EigenTrajectoryPoint* point);
   void shrinkQueueToMinimum();
 
   //interpolate the reference queue to the controller update rate
-  void linearInterpolateTrajectory(const mav_msgs::EigenTrajectoryPointDeque& input_queue,  mav_msgs::EigenTrajectoryPointDeque& output_queue);
+  void linearInterpolateTrajectory(const mav_msgs_rotors::EigenTrajectoryPointDeque& input_queue,  mav_msgs_rotors::EigenTrajectoryPointDeque& output_queue);
 
 
   void printQueue();

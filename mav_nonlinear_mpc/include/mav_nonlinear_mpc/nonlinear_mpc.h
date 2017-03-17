@@ -33,8 +33,8 @@
 
 #include <ros/ros.h>
 #include <Eigen/Eigen>
-#include <mav_msgs/conversions.h>
-#include <mav_msgs/eigen_mav_msgs.h>
+#include <mav_msgs_rotors/conversions.h>
+#include <mav_msgs_rotors/eigen_mav_msgs_rotors.h>
 #include <stdio.h>
 #include <mav_control_interface/mpc_queue.h>
 #include "acado_common.h"
@@ -119,14 +119,14 @@ class NonlinearModelPredictiveControl
   }
 
   // get reference and predicted state
-  bool getCurrentReference(mav_msgs::EigenTrajectoryPoint* reference) const;
-  bool getCurrentReference(mav_msgs::EigenTrajectoryPointDeque* reference) const;
-  bool getPredictedState(mav_msgs::EigenTrajectoryPointDeque* predicted_state) const;
+  bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPoint* reference) const;
+  bool getCurrentReference(mav_msgs_rotors::EigenTrajectoryPointDeque* reference) const;
+  bool getPredictedState(mav_msgs_rotors::EigenTrajectoryPointDeque* predicted_state) const;
 
   // set odom and commands
-  void setOdometry(const mav_msgs::EigenOdometry& odometry);
-  void setCommandTrajectoryPoint(const mav_msgs::EigenTrajectoryPoint& command_trajectory);
-  void setCommandTrajectory(const mav_msgs::EigenTrajectoryPointDeque& command_trajectory);
+  void setOdometry(const mav_msgs_rotors::EigenOdometry& odometry);
+  void setCommandTrajectoryPoint(const mav_msgs_rotors::EigenTrajectoryPoint& command_trajectory);
+  void setCommandTrajectory(const mav_msgs_rotors::EigenTrajectoryPointDeque& command_trajectory);
 
   // compute control input
   void calculateRollPitchYawrateThrustCommand(Eigen::Vector4d* ref_attitude_thrust);
@@ -215,7 +215,7 @@ class NonlinearModelPredictiveControl
   double solve_time_average_;
 
   // most recent odometry information
-  mav_msgs::EigenOdometry odometry_;
+  mav_msgs_rotors::EigenOdometry odometry_;
   bool received_first_odometry_;
 
   // initilize solver

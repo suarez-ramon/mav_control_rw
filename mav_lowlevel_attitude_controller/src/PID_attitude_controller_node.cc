@@ -13,7 +13,7 @@
  *
  */
 
-#include <mav_msgs/default_topics.h>
+#include <mav_msgs_rotors/default_topics.h>
 
 #include <mav_lowlevel_attitude_controller/PID_attitude_controller_node.h>
 
@@ -30,15 +30,15 @@ PIDAttitudeControllerNode::PIDAttitudeControllerNode(const ros::NodeHandle& nh,
   PID_attitude_controller_.InitializeParams();
 
   command_roll_pitch_yawrate_thrust_sub_ = nh_.subscribe(
-      mav_msgs::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST, 1,
+      mav_msgs_rotors::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST, 1,
       &PIDAttitudeControllerNode::CommandRollPitchYawRateThrustCallback, this);
 
-  odometry_sub_ = nh_.subscribe(mav_msgs::default_topics::ODOMETRY, 1,
+  odometry_sub_ = nh_.subscribe(mav_msgs_rotors::default_topics::ODOMETRY, 1,
                                 &PIDAttitudeControllerNode::OdometryCallback, this,
                                 ros::TransportHints().tcpNoDelay());
 
-  motor_velocity_reference_pub_ = nh_.advertise<mav_msgs::Actuators>(
-      mav_msgs::default_topics::COMMAND_ACTUATORS, 1);
+  motor_velocity_reference_pub_ = nh_.advertise<mav_msgs_rotors::Actuators>(
+      mav_msgs_rotors::default_topics::COMMAND_ACTUATORS, 1);
 
   dynamic_reconfigure::Server<mav_linear_mpc::PIDAttitudeConfig>::CallbackType f;
   f = boost::bind(&PIDAttitudeControllerNode::DynConfigCallback, this, _1, _2);
@@ -50,7 +50,7 @@ PIDAttitudeControllerNode::~PIDAttitudeControllerNode()
 }
 
 void PIDAttitudeControllerNode::CommandRollPitchYawRateThrustCallback(
-    const mav_msgs::RollPitchYawrateThrustConstPtr& roll_pitch_yawrate_thrust_reference)
+    const mav_msgs_rotors::RollPitchYawrateThrustConstPtr& roll_pitch_yawrate_thrust_reference)
 {
 
   PID_attitude_controller_.SetDesiredAttitude(roll_pitch_yawrate_thrust_reference->roll,
@@ -67,7 +67,7 @@ void PIDAttitudeControllerNode::OdometryCallback(const nav_msgs::OdometryConstPt
   if (!got_first_attitude_command_)
     return;
 
-  mav_msgs::EigenOdometry odometry;
+  mav_msgs_rotors::EigenOdometry odometry;
   eigenOdometryFromMsg(*odometry_msg, &odometry);
 
   PID_attitude_controller_.SetOdometry(odometry);
@@ -75,7 +75,7 @@ void PIDAttitudeControllerNode::OdometryCallback(const nav_msgs::OdometryConstPt
   Eigen::VectorXd ref_rotor_velocities;
   PID_attitude_controller_.CalculateRotorVelocities(&ref_rotor_velocities);
 
-  mav_msgs::Actuators turning_velocities_msg;
+  mav_msgs_rotors::Actuators turning_velocities_msg;
 
   turning_velocities_msg.angular_velocities.clear();
   for (int i = 0; i < ref_rotor_velocities.size(); i++)

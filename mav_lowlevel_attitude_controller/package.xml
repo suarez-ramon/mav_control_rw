@@ -13,7 +13,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>catkin_simple</buildtool_depend>
 
-  <depend>mav_msgs</depend>
+  <depend>mav_msgs_rotors</depend>
   <depend>std_msgs</depend>
   <depend>cmake_modules</depend>
   <depend>geometry_msgs</depend>

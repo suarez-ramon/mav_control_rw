@@ -53,7 +53,7 @@ void MPCQueue::clearQueue()
   current_queue_size_ = 0;
 }
 
-void MPCQueue::initializeQueue(const mav_msgs::EigenTrajectoryPoint& point,
+void MPCQueue::initializeQueue(const mav_msgs_rotors::EigenTrajectoryPoint& point,
 		double controller_sampling_time, double prediction_sampling_time) {
 	if (initialized_)
 		return;
@@ -70,7 +70,7 @@ void MPCQueue::initializeQueue(const mav_msgs::EigenTrajectoryPoint& point,
 	initialized_ = true;
 }
 
-void MPCQueue::initializeQueue(const mav_msgs::EigenOdometry& odometry,
+void MPCQueue::initializeQueue(const mav_msgs_rotors::EigenOdometry& odometry,
 		double controller_sampling_time, double prediction_sampling_time) {
 	if (initialized_)
 		return;
@@ -82,7 +82,7 @@ void MPCQueue::initializeQueue(const mav_msgs::EigenOdometry& odometry,
 
 	clearQueue();
 
-	mav_msgs::EigenTrajectoryPoint point;
+	mav_msgs_rotors::EigenTrajectoryPoint point;
 
 	point.position_W = odometry.position_W;
 	point.velocity_W = odometry.getVelocityWorld();
@@ -105,29 +105,29 @@ void MPCQueue::initializeQueue(double controller_sampling_time,
 			* std::ceil(prediction_sampling_time_ / queue_dt_);
 
 	clearQueue();
-	mav_msgs::EigenTrajectoryPoint point;
+	mav_msgs_rotors::EigenTrajectoryPoint point;
 	fillQueueWithPoint(point);
 
 	initialized_ = true;
 }
 
-void MPCQueue::fillQueueWithPoint(const mav_msgs::EigenTrajectoryPoint& point)
+void MPCQueue::fillQueueWithPoint(const mav_msgs_rotors::EigenTrajectoryPoint& point)
 {
   while (current_queue_size_ < minimum_queue_size_)
     pushBackPoint(point);
 }
 
-void MPCQueue::insertReference(const mav_msgs::EigenTrajectoryPoint& point)
+void MPCQueue::insertReference(const mav_msgs_rotors::EigenTrajectoryPoint& point)
 {
   clearQueue();
   fillQueueWithPoint(point);
   queue_start_time_ = 0.0;
 }
 
-void MPCQueue::insertReferenceTrajectory(const mav_msgs::EigenTrajectoryPointDeque& queue)
+void MPCQueue::insertReferenceTrajectory(const mav_msgs_rotors::EigenTrajectoryPointDeque& queue)
 {
 
-  mav_msgs::EigenTrajectoryPointDeque interpolated_queue;
+  mav_msgs_rotors::EigenTrajectoryPointDeque interpolated_queue;
   linearInterpolateTrajectory(queue, interpolated_queue);
 
   {
@@ -180,7 +180,7 @@ void MPCQueue::insertReferenceTrajectory(const mav_msgs::EigenTrajectoryPointDeq
   //ROS_INFO("Current queue size: %d, current actual size: %d", current_queue_size_, position_reference_.size());
 }
 
-void MPCQueue::pushBackPoint(const mav_msgs::EigenTrajectoryPoint& point)
+void MPCQueue::pushBackPoint(const mav_msgs_rotors::EigenTrajectoryPoint& point)
 {
   if (current_queue_size_ < maximum_queue_size_) {
     position_reference_.push_back(point.position_W);
@@ -226,7 +226,7 @@ void MPCQueue::popBackPoint()
   }
 }
 
-void MPCQueue::getLastPoint(mav_msgs::EigenTrajectoryPoint* point)
+void MPCQueue::getLastPoint(mav_msgs_rotors::EigenTrajectoryPoint* point)
 {
   assert(point!=NULL);
   if (current_queue_size_ > 0) {
@@ -243,7 +243,7 @@ void MPCQueue::updateQueue()
   if (initialized_) {
     popFrontPoint();
 
-    mav_msgs::EigenTrajectoryPoint point;
+    mav_msgs_rotors::EigenTrajectoryPoint point;
     getLastPoint(&point);
 
     while (current_queue_size_ < minimum_queue_size_)
@@ -304,8 +304,8 @@ void MPCQueue::getQueue(Vector3dDeque& position_reference, Vector3dDeque& veloci
   }
 }
 
-void MPCQueue::linearInterpolateTrajectory(const mav_msgs::EigenTrajectoryPointDeque& input_queue,
-                                           mav_msgs::EigenTrajectoryPointDeque& interpolated_queue)
+void MPCQueue::linearInterpolateTrajectory(const mav_msgs_rotors::EigenTrajectoryPointDeque& input_queue,
+                                           mav_msgs_rotors::EigenTrajectoryPointDeque& interpolated_queue)
 {
   if(input_queue.size() < 2){
     interpolated_queue = input_queue;
@@ -344,7 +344,7 @@ void MPCQueue::linearInterpolateTrajectory(const mav_msgs::EigenTrajectoryPointD
 
   //for each time_output find the first larger element in the time_input vector
   for (auto it = time_output.begin(); it != time_output.end(); ++it) {
-    mav_msgs::EigenTrajectoryPoint point;
+    mav_msgs_rotors::EigenTrajectoryPoint point;
 
     std::vector<int64_t>::iterator sol = std::upper_bound(time_input.begin(), time_input.end(),
                                                         *it);

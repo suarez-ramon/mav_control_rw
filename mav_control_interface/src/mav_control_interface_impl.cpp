@@ -16,9 +16,9 @@
  */
 
 #include <Eigen/Geometry>
-#include <mav_msgs/default_topics.h>
-#include <mav_msgs/AttitudeThrust.h>
-#include <mav_msgs/RollPitchYawrateThrust.h>
+#include <mav_msgs_rotors/default_topics.h>
+#include <mav_msgs_rotors/AttitudeThrust.h>
+#include <mav_msgs_rotors/RollPitchYawrateThrust.h>
 #include <trajectory_msgs/MultiDOFJointTrajectory.h>
 
 #include "mav_control_interface_impl.h"
@@ -40,14 +40,14 @@ MavControlInterfaceImpl::MavControlInterfaceImpl(ros::NodeHandle& nh, ros::NodeH
   odometry_watchdog_ = nh_.createTimer(ros::Duration(kOdometryWatchdogTimeout),
                                        &MavControlInterfaceImpl::OdometryWatchdogCallback, this, false, true);
 
-  command_trajectory_subscriber_ = nh_.subscribe(mav_msgs::default_topics::COMMAND_POSE, 1,
+  command_trajectory_subscriber_ = nh_.subscribe(mav_msgs_rotors::default_topics::COMMAND_POSE, 1,
                                                  &MavControlInterfaceImpl::CommandPoseCallback, this);
 
   command_trajectory_array_subscriber_ = nh_.subscribe(
-      mav_msgs::default_topics::COMMAND_TRAJECTORY, 1,
+      mav_msgs_rotors::default_topics::COMMAND_TRAJECTORY, 1,
       &MavControlInterfaceImpl::CommandTrajectoryCallback, this);
 
-  odometry_subscriber_ = nh_.subscribe(mav_msgs::default_topics::ODOMETRY, 1,
+  odometry_subscriber_ = nh_.subscribe(mav_msgs_rotors::default_topics::ODOMETRY, 1,
                                        &MavControlInterfaceImpl::OdometryCallback, this,
                                        ros::TransportHints().tcpNoDelay());
 
@@ -102,10 +102,10 @@ void MavControlInterfaceImpl::RcUpdatedCallback(const RcInterfaceBase& rc_interf
 void MavControlInterfaceImpl::CommandPoseCallback(const geometry_msgs::PoseStampedConstPtr& msg)
 {
 
-  mav_msgs::EigenTrajectoryPoint reference;
-  mav_msgs::eigenTrajectoryPointFromPoseMsg(*msg, &reference);
+  mav_msgs_rotors::EigenTrajectoryPoint reference;
+  mav_msgs_rotors::eigenTrajectoryPointFromPoseMsg(*msg, &reference);
 
-  mav_msgs::EigenTrajectoryPointDeque references;
+  mav_msgs_rotors::EigenTrajectoryPointDeque references;
   references.push_back(reference);
 
   state_machine_->process_event(state_machine::ReferenceUpdate(references));
@@ -118,8 +118,8 @@ void MavControlInterfaceImpl::CommandTrajectoryCallback(
   if (array_size == 0)
     return;
 
-  mav_msgs::EigenTrajectoryPointDeque references;
-  mav_msgs::eigenTrajectoryPointDequeFromMsg(*msg, &references);
+  mav_msgs_rotors::EigenTrajectoryPointDeque references;
+  mav_msgs_rotors::eigenTrajectoryPointDequeFromMsg(*msg, &references);
 
   state_machine_->process_event(state_machine::ReferenceUpdate(references));
 }
@@ -127,8 +127,8 @@ void MavControlInterfaceImpl::CommandTrajectoryCallback(
 void MavControlInterfaceImpl::OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg)
 {
   ROS_INFO_ONCE("Control interface got first odometry message.");
-  mav_msgs::EigenOdometry odometry;
-  mav_msgs::eigenOdometryFromMsg(*odometry_msg, &odometry);
+  mav_msgs_rotors::EigenOdometry odometry;
+  mav_msgs_rotors::eigenOdometryFromMsg(*odometry_msg, &odometry);
   state_machine_->process_event(state_machine::OdometryUpdate(odometry));
 }
 
